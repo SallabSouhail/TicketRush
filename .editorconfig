@@ -1,0 +1,34 @@
+# https://editorconfig.org
+# Stop searching for other .editorconfig files in parent folders
+root = true
+
+# Defaults for every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+max_line_length = 120
+
+# Java, Maven, SQL
+[*.{java,xml,sql}]
+indent_size = 4
+
+# YAML (Spring config, Docker Compose, GitHub Actions), JSON, frontend files
+[*.{yml,yaml,json,ts,js,mjs,html,css,scss}]
+indent_size = 2
+
+# Markdown: two trailing spaces mean a line break, keep them
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# Windows scripts (consistent with .gitattributes)
+[*.{cmd,bat,ps1}]
+end_of_line = crlf
+
+# Makefiles require tabs
+[Makefile]
+indent_style = tab

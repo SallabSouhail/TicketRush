@@ -1,0 +1,45 @@
+# Normalise every text file to LF in the repository and in the working tree,
+# whatever the OS or the core.autocrlf setting of the developer.
+* text=auto eol=lf
+
+# Windows scripts must keep CRLF, or cmd.exe / PowerShell may fail to run them
+*.cmd   text eol=crlf
+*.bat   text eol=crlf
+*.ps1   text eol=crlf
+
+# Unix scripts must keep LF, or they fail in Docker and on Linux CI runners
+*.sh    text eol=lf
+mvnw    text eol=lf
+
+# Source and configuration files (explicit for readability)
+*.java  text diff=java
+*.xml   text
+*.yml   text
+*.yaml  text
+*.properties text
+*.sql   text
+*.json  text
+*.ts    text
+*.html  text diff=html
+*.css   text diff=css
+*.scss  text diff=css
+*.md    text diff=markdown
+Dockerfile text
+
+# Binary files: never converted, never diffed as text
+*.jar   binary
+*.war   binary
+*.class binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.zip   binary
+*.gz    binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.eot   binary
