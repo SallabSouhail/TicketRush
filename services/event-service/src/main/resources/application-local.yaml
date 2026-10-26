@@ -1,0 +1,12 @@
+# Local development profile, activated with SPRING_PROFILES_ACTIVE=local.
+# Targets infra/compose/compose.infra.yaml. These values are dev-only and match .env.example.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/event_db
+    username: ticketrush
+    password: ticketrush-local
+
+management:
+  endpoint:
+    health:
+      show-details: always
