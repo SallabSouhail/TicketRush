@@ -1,6 +1,7 @@
 package com.ticketrush.event.event.domain;
 
 import java.time.Instant;
+import java.time.Clock;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
@@ -82,6 +83,60 @@ public class Event {
 
     /** Required by JPA only. */
     protected Event() {
+    }
+
+    /** Creates a new draft after enforcing the rules that depend on the current time. */
+    public static Event createDraft(
+            String title,
+            String description,
+            EventCategory category,
+            int capacity,
+            Venue venue,
+            Instant startAt,
+            Instant endAt,
+            Instant salesStartAt,
+            Instant salesEndAt,
+            UUID organizerId,
+            Clock clock) {
+        require(title != null && title.equals(title.trim()) && title.length() >= 3 && title.length() <= 150,
+                "title must contain between 3 and 150 characters without surrounding whitespace");
+        require(description == null || description.length() <= 5000,
+                "description must not exceed 5000 characters");
+        require(category != null, "category is required");
+        require(capacity >= 1 && capacity <= 100000, "capacity must be between 1 and 100000");
+        require(venue != null, "venue is required");
+        require(startAt != null, "startAt is required");
+        require(endAt != null, "endAt is required");
+        require(salesStartAt != null, "salesStartAt is required");
+        require(salesEndAt != null, "salesEndAt is required");
+        require(organizerId != null, "organizerId is required");
+        require(clock != null, "clock is required");
+
+        require(salesStartAt.isBefore(salesEndAt)
+                        && !salesEndAt.isAfter(startAt)
+                        && startAt.isBefore(endAt),
+                "dates must satisfy salesStartAt < salesEndAt <= startAt < endAt");
+        require(startAt.isAfter(clock.instant()), "startAt must be in the future");
+
+        Event event = new Event();
+        event.title = title;
+        event.description = description;
+        event.category = category;
+        event.capacity = capacity;
+        event.venue = venue;
+        event.startAt = startAt;
+        event.endAt = endAt;
+        event.salesStartAt = salesStartAt;
+        event.salesEndAt = salesEndAt;
+        event.status = EventStatus.DRAFT;
+        event.organizerId = organizerId;
+        return event;
+    }
+
+    private static void require(boolean condition, String message) {
+        if (!condition) {
+            throw new IllegalArgumentException(message);
+        }
     }
 
     public UUID getId() {
